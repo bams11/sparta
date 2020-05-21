@@ -16,6 +16,9 @@
       .price {
           font-size: 15px;
       }
+      .numIns {
+          font-size : 10px;
+      }
       .product_photo {
           color: white;
           width: 200px;
@@ -66,10 +69,54 @@
           else if ($('#orderNum').val() ==''){
               alert('전화번호를 입력해주세요');
           }
+          else if ($('#orderNum').val() !=''){
+            let phoneNum = $('#orderNum').val();
+            
+            if (phoneNum.includes('-')) {
+              let firstNum = phoneNum.split('-')[0];
+              let secondNum = phoneNum.split('-')[1];
+              let thirdNum = phoneNum.split('-')[2];
+              if (firstNum.length != 3){
+                alert('올바른 전화번호 양식이 아닙니다.');
+              }
+              else if (secondNum.length != 4){
+                alert('올바른 전화번호 양식이 아닙니다.');
+              }
+              else if (thirdNum.length != 4){
+                alert('올바른 전화번호 양식이 아닙니다.');
+              }
+              else{
+                alert('주문이 완료되었습니다');
+              }
+              
+            } 
+            else {
+                alert('올바른 전화번호 양식이 아닙니다.');
+            }
+          }
           else{ alert ('주문이 완료되었습니다')
 
           }
       }
+  </script>
+  <script>
+        $.ajax({
+            type: "GET",
+            url: "https://api.manana.kr/exchange/rate.json",
+            data: {},
+            success: function (response) {
+                let USDKRW = response[1]["rate"];
+                    let temp_html = `<li>${USDKRW}</li>`
+                    $('#exchan').append(temp_html);
+                }
+        })
+</script>
+<script>
+
+  $(document).ready(function(){
+
+  });
+  
   </script>
 </head>
 <body>
@@ -79,7 +126,7 @@
       <h1 class="product_title"> 게이밍 마우스<span class ="price">가격 : 20000원/개</span></h1> 
       
       <h5 class="subtitle"> Logitech g102ic gaming mouse는 사용자가 오로지 게임에만 몰입할 수 있도록 설계되었습니다. G102IC에 탑재된 버튼 텐션 시스템은 좌우 클릭의 장력을 일정하게 유지시키고 클릭에 소요되는 압력을 낮추어 빠른 반응성과 안정성은 물론 특별한 클릭감을 선사합니다</h5>
-      <h3 class="subtitle"> 주문하기</h3>
+      <p id="exchan"> <span>달러 -원 환율 </span> </p1> 
       <div class = product_comp>
         <div class="input-group mb-3">
           <span class="input-group-text" id="Name">주문자 이름</span>
@@ -105,6 +152,7 @@
           <span class="input-group-text" id="Number">전화번호</span>
             <textarea class="form-control" id="orderNum" rows="1"></textarea>
         </div>
+        <div class ="numIns"> 전화번호 입력 시, -를 포함해주세요. </div>
       </div>
     
       <button class ="button" onclick ="orderCheck()">주문하기</button>
