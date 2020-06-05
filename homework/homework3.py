@@ -17,7 +17,7 @@ for music in musics:
     a_tag = music.select_one('td.info> a.title.ellipsis')
 
     if a_tag is not None:
-        rank = music.select_one('tr.list > td.number').contents[0].strip()
+        rank = music.select_one('tr.list > td.number')[0].strip()
         title = a_tag.text.strip()
         singer = music.select_one('tr.list > td.info > a.artist.ellipsis').text.strip()
         doc = {

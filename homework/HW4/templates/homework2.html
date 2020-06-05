@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logitech g102ic.</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <style>
+    * {
+      font-family: 'Do Hyeon', sans-serif;
+    }
+
+    .price {
+      font-size: 15px;
+    }
+
+    .numIns {
+      font-size: 10px;
+    }
+
+    .product_photo {
+      color: white;
+      width: 200px;
+      height: 500px;
+      background-image: url('https://img.danawa.com/prod_img/500000/628/603/img/4603628_1.jpg?shrink=500:500&_v=20191206174555');
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+
+      border-radius: 10px;
+      text-align: center;
+      padding-top: 40px;
+      margin: 10px auto;
+      width: 600px;
+    }
+
+    .rayout {
+      margin: 10px auto;
+      width: 600px;
+    }
+
+    .button {
+      border-radius: 10%;
+      background-color: blue;
+      color: white;
+      padding: 9px 18px;
+      font-size: 16px;
+      margin-left: 250px;
+      margin-right: 250px;
+
+    }
+
+    .form-group {
+      font-size: 17px;
+    }
+
+
+
+
+
+    }
+  </style>
+  <script>
+    function orderCheck() {
+      if ($('#orderName').val() == '') {
+        alert('이름을 입력해주세요');
+      }
+      else if ($('#orderCount').val() == '수량을 선택하세요') {
+        alert('수량을 선택하세요');
+      }
+      else if ($('#orderAddr').val() == '') {
+        alert('주소를 입력해주세요');
+      }
+      else if ($('#orderNum').val() == '') {
+        alert('전화번호를 입력해주세요');
+      }
+      else if ($('#orderNum').val() != '') {
+        let phoneNum = $('#orderNum').val();
+
+        if (phoneNum.includes('-')) {
+          let firstNum = phoneNum.split('-')[0];
+          let secondNum = phoneNum.split('-')[1];
+          let thirdNum = phoneNum.split('-')[2];
+          if (firstNum.length != 3) {
+            alert('올바른 전화번호 양식이 아닙니다.');
+          }
+          else if (secondNum.length != 4) {
+            alert('올바른 전화번호 양식이 아닙니다.');
+          }
+          else if (thirdNum.length != 4) {
+            alert('올바른 전화번호 양식이 아닙니다.');
+          }
+          else {
+            alert('주문이 완료되었습니다');
+          }
+
+        }
+        else {
+          alert('올바른 전화번호 양식이 아닙니다.');
+        }
+      }
+      else {
+        alert('주문이 완료되었습니다')
+
+      }
+    }
+  </script>
+  <script>
+    $.ajax({
+      type: "GET",
+      url: "https://api.manana.kr/exchange/rate.json",
+      data: {},
+      success: function (response) {
+        let USDKRW = response[1]["rate"];
+        let temp_html = `<li>${USDKRW}</li>`
+        $('#exchan').append(temp_html);
+      }
+    })
+    let orderName = $('#orderName').val();
+
+    let orderCount = $('#orderCount').val();
+
+    let orderAddress = $('#orderAddr').val();
+
+    let orderNumber = $('#orderNum').val();
+
+    $.ajax({
+
+      type: "POST",
+
+      url: "/order_receive",
+
+      data: { name_give: orderName, count_give: orderCount, address_give: orderAddress, number_give: orderNumber },
+
+      success: function (response) { // 성공하면
+
+        if (response['result'] == 'success') {
+
+          // alert(response['msg']);
+
+          window.location.reload();
+
+        }
+
+      }
+
+    })
+
+}
+
+
+
+    function listing() {
+
+      $.ajax({
+
+        type: "GET",
+
+        url: "/order",
+
+        data: {},
+
+        success: function (response) {
+
+          if (response['result'] == 'success') {
+
+            let orders = response['order'];
+
+            for (let i = 0; i < order.length; ++i) {
+
+              make_chart(order[i]['name'], order[i]['count'], order[i]['address'], order[i]['number'])
+
+            }
+
+          }
+
+        }
+
+      })
+
+    }
+
+
+
+    function make_chart(name, count, address, number) {
+
+      let temp_html = `<tr>
+
+          <th scope="row">${name}</th>
+
+          <td>${count}</td>
+
+          <td>${address}</td>
+
+          <td>${number}</td>
+
+      </tr>`
+
+
+
+      $('#table').append(temp_html);
+
+    }
+  </script>
+
+  <script>
+
+    $(document).ready(function () {
+
+    });
+
+  </script>
+</head>
+
+<body>
+  <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+  <div class="product_photo"> </div>
+  <div class="rayout">
+    <h1 class="product_title"> 게이밍 마우스<span class="price">가격 : 20000원/개</span></h1>
+
+    <h5 class="subtitle"> Logitech g102ic gaming mouse는 사용자가 오로지 게임에만 몰입할 수 있도록 설계되었습니다. G102IC에 탑재된 버튼 텐션 시스템은 좌우 클릭의
+      장력을 일정하게 유지시키고 클릭에 소요되는 압력을 낮추어 빠른 반응성과 안정성은 물론 특별한 클릭감을 선사합니다</h5>
+    <p id="exchan"> <span>달러 -원 환율 </span> </p1>
+    <div class=product_comp>
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="Name">주문자 이름</span>
+        <input id="orderName" type="text" class="form-control">
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="Count">수량</span>
+        <select class="form-control" id="orderCount">
+          <option>수량을 선택하세요</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
+
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="address">주소</span>
+        <textarea class="form-control" id="orderAddr" rows="1"></textarea>
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="Number">전화번호</span>
+        <textarea class="form-control" id="orderNum" rows="1"></textarea>
+      </div>
+      <div class="numIns"> 전화번호 입력 시, -를 포함해주세요. </div>
+    </div>
+
+    <button class="button" onclick="orderCheck()">주문하기</button>
+  </div>
+
+
+</body>
+
+</html>
